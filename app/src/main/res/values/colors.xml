@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary color of the app (shown in the app bar) -->
-    <color name="colorPrimary">#4CAF50</color>
-
-    <!-- Primary dark color of the app (shown in the status bar) -->
-    <color name="colorPrimaryDark">#087f23</color>
-
-    <!-- Accent color of the app -->
-    <color name="colorAccent">#FF4081</color>
-
     <!-- Background color for the image button with the magnifying glass -->
     <color name="search_button_background">#D3D3D3</color>
 
@@ -18,9 +9,14 @@
     <!-- Button tint color for the checkboxes in the main page -->
     <color name="checkbox_tint">#FFAB40</color>
 
-    <color name="purple_200">#b84dff</color>
-    <color name="purple_700">#cc80ff</color>
-    <color name="black">#000000</color>
-    <color name="teal_200">#33ccff</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="light_grey">#e0ebeb</color>
+    <color name="light_brown">#804000</color>
 
 </resources>

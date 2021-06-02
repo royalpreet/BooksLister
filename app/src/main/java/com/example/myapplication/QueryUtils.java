@@ -20,24 +20,13 @@ import java.util.List;
 
 final class QueryUtils {
 
-	/** Tag for the log messages */
 	private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
-	/** Create a private constructor because no one should ever create a {@link QueryUtils} object. */
 	private QueryUtils() {
 	}
 
-	/**
-	 * Query the Google Books via the API and return a list of {@link String} objects.
-	 *
-	 * @param requestUrl a {@link String} as an url
-	 * @return the book titles of all the fetched books
-	 */
 	static List<Book> fetchBooks(String requestUrl) {
-		// Create valid url object from the requestURL
 		URL url = createUrl(requestUrl);
-
-		// Initialize empty String object to hold the parsed JSON response
 		String jsonResponse = "";
 
 		// Perform HTTP request to the above created valid URL
@@ -48,33 +37,21 @@ final class QueryUtils {
 		}
 
 		// Extract information from the JSON response for each book
-		// Return list of books
 		return QueryUtils.extractFeatures(jsonResponse);
 	}
 
-	/** Returns new URL object from the given string URL. */
 	private static URL createUrl(String stringUrl) {
-		// Initialize an empty {@link URL} object to hold the parsed URL from the stringUrl
 		URL url = null;
-
-		// Parse valid URL from param stringUrl
-		// Handle Malformed urls
 		try {
 			url = new URL(stringUrl);
 		} catch (MalformedURLException e) {
 			Log.e(LOG_TAG, "Problem building the url!");
 		}
 
-		// Return valid url
 		return url;
 	}
 
-	/**
-	 * Return a list of {@link String} objects that has been built up from
-	 * parsing the given JSON response.
-	 */
 	private static List<Book> extractFeatures(String booksJSON) {
-		// Exit early if no data was returned from the HTTP request
 		if (TextUtils.isEmpty(booksJSON)) {
 			return null;
 		}
@@ -147,7 +124,7 @@ final class QueryUtils {
 				}
 
 				// Initialize float variable to hold current book's ratings
-				float bookRating = 0f;
+				float bookRating = -1f;
 				// Check whether the JSON results contain information on book rating
 				if (volume.has("averageRating")) {
 					// Get the average rating of the book from the JSON response
@@ -170,22 +147,18 @@ final class QueryUtils {
 					currency = priceInfo.getString("currencyCode");
 				}
 
-				// Add book to the list
-				allBooks.add(new Book(bookTitle, authors.toString(), bookRating, bookPrice, currency));
+				String link = volume.getString("previewLink");
+
+				allBooks.add(new Book(bookTitle, authors.toString(), bookRating, bookPrice, currency, link));
 			}
 
 		} catch (JSONException e) {
-			// If an error is thrown when executing any of the above statements in the "try" block,
-			// catch the exception here, so the app doesn't crash. Print a log message
-			// with the message from the exception.
 			Log.e(LOG_TAG, "Problem parsing the google books JSON results", e);
 		}
 
-		// Return the successfully parsed book titles as a {@link List} object
 		return allBooks;
 	}
 
-	/** Make an HTTP request to the given URL and return a String as the response. */
 	private static String makeHttpRequest(URL url) throws IOException {
 		// Initialize variable to hold the parsed json response
 		String jsonResponse = "";
@@ -233,41 +206,26 @@ final class QueryUtils {
 				urlConnection.disconnect();
 			}
 			if (inputStream != null) {
-				// Close the stream after successfully parsing the request
-				// This may throw an IOException which is why it is explicitly mentioned in the
-				// method signature
 				inputStream.close();
 			}
 		}
 
-		// Return JSON as a {@link String}
 		return jsonResponse;
 	}
 
-	/**
-	 * Convert the {@link InputStream} into a String which contains the
-	 * whole JSON response from the server.
-	 */
 	private static String readFromStream(InputStream inputStream) throws IOException {
 		StringBuilder output = new StringBuilder();
 		if (inputStream != null) {
-			// Decode the bits
 			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
-
-			// Buffer the decoded characters
 			BufferedReader reader = new BufferedReader(inputStreamReader);
-
-			// Store a line of characters from the {@link BufferedReader}
 			String line = reader.readLine();
 
-			// If not end of buffered input stream, read next line and add to output
 			while (line != null) {
 				output.append(line);
 				line = reader.readLine();
 			}
 		}
 
-		// Convert the mutable characters sequence from the builder into a string and return
 		return output.toString();
 	}
 }
